@@ -35,8 +35,13 @@
 */
 
 /* _____________ 你的代码 _____________ */
-
-type DeepReadonly<T> = any
+/**
+ * 使用递归进行解决
+ * keyof T[P] extends never 相当于判断该属性是否为简单值
+ */
+type DeepReadonly<T> = {
+  readonly [P in keyof T]: keyof T[P] extends never ? T[P] : DeepReadonly<T[P]>
+}
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
@@ -68,6 +73,8 @@ type X1 = {
     }
   }
 }
+
+type T1 = X1 extends object ? true : false
 
 type X2 = { a: string } | { b: number }
 

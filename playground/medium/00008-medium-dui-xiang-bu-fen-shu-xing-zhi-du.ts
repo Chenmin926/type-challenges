@@ -33,8 +33,17 @@
 */
 
 /* _____________ 你的代码 _____________ */
-
-type MyReadonly2<T, K> = any
+/**
+ * K extends keyof T = keyof T 泛型设置默认参数
+ * 将属性分为两类 一类要是readonly
+ * 一类不用
+ * 然后用交叉类型合并为一个
+ */
+type MyReadonly2<T, K extends keyof T = keyof T> = {
+  readonly [P in keyof T as P extends K ? P : never]: T[P];
+} & {
+  [O in keyof T as O extends K ? never : O]: T[O]
+}
 
 /* _____________ 测试用例 _____________ */
 import type { Alike, Expect } from '@type-challenges/utils'
